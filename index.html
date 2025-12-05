@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aurum — Fine Dining Restaurant</title>
+  <meta name="description" content="Exclusive fine-dining in the heart of the city." />
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <!-- AOS Animation Library -->
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+  <style>
+    :root {
+      --gold: #D4AF37;
+      --dark: #0F0F0F;
+      --light: #F8F5F2;
+      --gray: #222222;
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--dark);
+      color: var(--light);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    h1,h2,h3,h4 { font-family: 'Playfair Display', serif; font-weight: 700; }
+
+    /* Image styling */
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+    
+    /* Image loading state */
+    .img-loading {
+      background: linear-gradient(90deg, #1a1a1a 0%, #222222 50%, #1a1a1a 100%);
+      background-size: 200% 100%;
+      animation: loading 1.5s infinite;
+      border-radius: 10px;
+    }
+    
+    @keyframes loading {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+    
+    /* Fallback styling */
+    .image-fallback {
+      background: linear-gradient(45deg, #1a1a1a 0%, #2a2a2a 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gold);
+      font-family: 'Playfair Display', serif;
+      text-align: center;
+      padding: 2rem;
+      border-radius: 10px;
+    }
+
+    /* Floating Action Buttons */
+    .fab {
+      position: fixed;
+      bottom: 25px;
+      right: 20px;
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    .fab-btn {
+      width: 62px;
+      height: 62px;
+      border-radius: 50%;
+      background: var(--gold);
+      color: var(--dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      box-shadow: 0 8px 25px rgba(212,175,55,0.4);
+      transition: all 0.3s ease;
+      animation: pulse 2s infinite;
+    }
+    .fab-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 12px 35px rgba(212,175,55,0.6);
+    }
+    .fab-btn.reserve {
+      background: var(--dark);
+      color: var(--gold);
+      border: 2px solid var(--gold);
+    }
+    .fab-btn.whatsapp {
+      background: #25D366;
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(212,175,55,0.4); }
+      70% { box-shadow: 0 0 0 12px rgba(212,175,55,0); }
+      100% { box-shadow: 0 0 0 0 rgba(212,175,55,0); }
+    }
+
+    /* Header & Nav */
+    header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      padding: 1.5rem 5%;
+      background: rgba(15,15,15,0.95);
+      backdrop-filter: blur(12px);
+      transition: all 0.4s;
+    }
+    nav { display:flex; justify-content:space-between; align-items:center; max-width:1400px; margin:0 auto; }
+    .logo { font-family:'Playfair Display',serif; font-size:2.2rem; color:var(--gold); text-decoration:none; }
+    .nav-links { display:flex; gap:3rem; }
+    .nav-links a { color:var(--light); text-decoration:none; font-weight:500; position:relative; }
+    .nav-links a::after { content:''; position:absolute; width:0; height:2px; bottom:-8px; left:50%; background:var(--gold); transition:all 0.4s; }
+    .nav-links a:hover { color:var(--gold); }
+    .nav-links a:hover::after { width:100%; left:0; }
+    .menu-toggle { display:none; cursor:pointer; }
+    .menu-toggle span { display:block; width:28px; height:2px; background:var(--gold); margin:6px 0; transition:0.3s; }
+
+    /* HERO SECTION - FIXED */
+    .hero {
+      height: 100vh;
+      min-height: 750px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      overflow: hidden;
+    }
+    
+    .hero-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 1;
+    }
+    
+    .hero-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.7));
+      z-index: 2;
+    }
+    
+    .hero-content {
+      position: relative;
+      z-index: 3;
+      padding: 0 20px;
+    }
+    
+    .hero h1 { 
+      font-size: clamp(3.5rem, 10vw, 6.5rem); 
+      color: var(--gold); 
+      margin-bottom: 1rem;
+      text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+    }
+    
+    .hero p { 
+      font-size: clamp(1.2rem, 3vw, 1.5rem); 
+      max-width: 800px; 
+      margin: 0 auto 2.5rem; 
+      opacity: 0.95;
+      text-shadow: 1px 1px 5px rgba(0,0,0,0.5);
+    }
+
+    .btn {
+      padding: 1.1rem 3.2rem;
+      background: transparent;
+      border: 2px solid var(--gold);
+      color: var(--gold);
+      text-decoration: none;
+      font-weight: 600;
+      letter-spacing: 2px;
+      transition: all 0.4s;
+      display: inline-block;
+    }
+    .btn:hover {
+      background: var(--gold);
+      color: var(--dark);
+      transform: translateY(-3px);
+    }
+
+    section { 
+      padding: 10rem 5%; 
+      max-width: 1400px; 
+      margin: 0 auto; 
+    }
+    
+    .section-title {
+      text-align: center;
+      font-size: clamp(2.5rem, 6vw, 3.8rem);
+      margin-bottom: 5rem;
+      color: var(--gold);
+    }
+
+    /* About */
+    .about { 
+      display: grid; 
+      grid-template-columns: 1fr 1fr; 
+      gap: 4rem; 
+      align-items: center; 
+    }
+    
+    .about img { 
+      width: 100%; 
+      height: 600px; 
+      object-fit: cover; 
+      border-radius: 10px; 
+    }
+
+    /* Menu Grid */
+    .menu-grid { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
+      gap: 2.5rem; 
+    }
+    
+    .menu-item {
+      background: rgba(255,255,255,0.03);
+      padding: 2rem;
+      border-radius: 10px;
+      text-align: center;
+      transition: transform 0.3s;
+    }
+    
+    .menu-item:hover { 
+      transform: translateY(-5px); 
+    }
+    
+    .menu-item img { 
+      width: 100%; 
+      height: 220px; 
+      object-fit: cover; 
+      border-radius: 10px; 
+      margin-bottom: 1rem; 
+    }
+    
+    .menu-item h3 { 
+      color: var(--gold); 
+      margin: 1rem 0; 
+    }
+    
+    .menu-item p:last-of-type { 
+      color: var(--gold); 
+      font-size: 1.6rem; 
+      font-weight: 600; 
+    }
+
+    /* Gallery */
+    .gallery { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+      gap: 1.5rem; 
+    }
+    
+    .gallery img { 
+      width: 100%; 
+      height: 350px; 
+      object-fit: cover; 
+      border-radius: 10px; 
+      transition: 0.5s; 
+    }
+    
+    .gallery img:hover { 
+      transform: scale(1.04); 
+    }
+
+    /* Contact */
+    .contact { 
+      background: var(--gray); 
+      text-align: center; 
+    }
+    
+    .contact-grid { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+      gap: 4rem; 
+      margin-top: 3rem; 
+    }
+    
+    .contact h3 { 
+      color: var(--gold); 
+      margin-bottom: 1.5rem; 
+    }
+    
+    .contact p { 
+      font-size: 1.2rem; 
+    }
+
+    /* Footer */
+    footer { 
+      background: #000; 
+      padding: 4rem 5%; 
+      text-align: center; 
+      border-top: 1px solid rgba(212,175,55,0.2); 
+    }
+    
+    footer p { 
+      opacity: 0.7; 
+    }
+
+    /* Responsive */
+    @media (max-width: 992px) {
+      .about { 
+        grid-template-columns: 1fr; 
+      }
+      .about img { 
+        height: 400px; 
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .nav-links { 
+        position: fixed; 
+        top: 0; 
+        right: -100%; 
+        width: 100%; 
+        height: 100vh; 
+        background: var(--dark); 
+        flex-direction: column; 
+        align-items: center; 
+        justify-content: center; 
+        transition: 0.4s; 
+      }
+      .nav-links.active { 
+        right: 0; 
+      }
+      .menu-toggle { 
+        display: block; 
+      }
+      .gallery img { 
+        height: 250px; 
+      }
+      .menu-item img { 
+        height: 180px; 
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Floating Buttons -->
+  <div class="fab">
+    <a href="tel:+15551234567" class="fab-btn reserve" title="Call to Reserve">📞</a>
+    <a href="https://wa.me/15551234567?text=Hi%20Aurum!%20I'd%20like%20to%20make%20a%20reservation%20/%20place%20an%20order." 
+       class="fab-btn whatsapp" target="_blank" title="WhatsApp Order">💬</a>
+  </div>
+
+  <!-- Navigation -->
+  <header>
+    <nav>
+      <a href="#" class="logo">AURUM</a>
+      <div class="nav-links" id="navLinks">
+        <a href="#home">Home</a>
+        <a href="#about">About</a>
+        <a href="#menu">Menu</a>
+        <a href="#gallery">Gallery</a>
+        <a href="#contact">Contact</a>
+      </div>
+      <div class="menu-toggle" id="menuToggle">
+        <span></span><span></span><span></span>
+      </div>
+    </nav>
+  </header>
+
+  <!-- HERO SECTION - FIXED VERSION -->
+  <section id="home" class="hero" data-aos="fade-down">
+    <!-- Background Image -->
+    <img 
+      src="https://images.pexels.com/photos/1581554/pexels-photo-1581554.jpeg?auto=compress&cs=tinysrgb&w=1920" 
+      alt="Aurum Restaurant Interior" 
+      class="hero-bg"
+      loading="eager"
+      onerror="handleHeroImageError(this)"
+    >
+    
+    <!-- Dark Overlay -->
+    <div class="hero-overlay"></div>
+    
+    <!-- Content -->
+    <div class="hero-content">
+      <h1>AURUM</h1>
+      <p>An exclusive fine-dining journey where culinary artistry meets timeless elegance.</p>
+      <a href="tel:+15551234567" class="btn">RESERVE A TABLE</a>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section id="about" data-aos="fade-up">
+    <h2 class="section-title">Our Philosophy</h2>
+    <div class="about">
+      <div data-aos="fade-right">
+        <h3>Elevated Dining Redefined</h3>
+        <p style="margin:2rem 0;font-size:1.15rem;">At Aurum, every dish tells a story. We source the finest seasonal ingredients from around the world and transform them into unforgettable experiences.</p>
+        <p style="font-size:1.15rem;">From intimate dinners to grand celebrations, we craft moments that linger long after the last bite.</p>
+      </div>
+      <img 
+        src="https://images.pexels.com/photos/262978/pexels-photo-262978.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800&dpr=2" 
+        alt="Fine Dining Chef"
+        data-aos="fade-left"
+        loading="lazy"
+        onerror="handleImageError(this, 'about-fallback', 'Chef preparing exquisite cuisine')"
+      >
+    </div>
+  </section>
+
+  <!-- Menu Highlights -->
+  <section id="menu" style="background:#111;" data-aos="fade-up">
+    <h2 class="section-title">Signature Creations</h2>
+    <div class="menu-grid">
+      <div class="menu-item" data-aos="fade-up" data-aos-delay="100">
+        <img 
+          src="https://images.pexels.com/photos/3763847/pexels-photo-3763847.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&dpr=2" 
+          alt="Wagyu Beef Tartare"
+          loading="lazy"
+          onerror="handleImageError(this, 'menu-fallback', 'Wagyu Beef Tartare')"
+        >
+        <h3>Wagyu Beef Tartare</h3>
+        <p>Hand-cut A5 Wagyu, truffle ponzu, quail egg, caviar</p>
+        <p>$78</p>
+      </div>
+      <div class="menu-item" data-aos="fade-up" data-aos-delay="200">
+        <img 
+          src="https://images.pexels.com/photos/699953/pexels-photo-699953.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&dpr=2" 
+          alt="Lobster Thermidor"
+          loading="lazy"
+          onerror="handleImageError(this, 'menu-fallback', 'Lobster Thermidor')"
+        >
+        <h3>Lobster Thermidor</h3>
+        <p>Fresh Atlantic lobster, cognac cream, gruyère gratinee</p>
+        <p>$120</p>
+      </div>
+      <div class="menu-item" data-aos="fade-up" data-aos-delay="300">
+        <img 
+          src="https://images.pexels.com/photos/1251208/pexels-photo-1251208.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&dpr=2" 
+          alt="72-Hour Short Rib"
+          loading="lazy"
+          onerror="handleImageError(this, 'menu-fallback', '72-Hour Short Rib')"
+        >
+        <h3>72-Hour Short Rib</h3>
+        <p>Sous-vide beef short rib, red wine reduction, bone marrow</p>
+        <p>$95</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Gallery -->
+  <section id="gallery" data-aos="fade-up">
+    <h2 class="section-title">Moments at Aurum</h2>
+    <div class="gallery">
+      <img 
+        src="https://images.pexels.com/photos/2074130/pexels-photo-2074130.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&dpr=2" 
+        alt="Restaurant Interior" 
+        data-aos="zoom-in"
+        loading="lazy"
+        onerror="handleImageError(this, 'gallery-fallback', 'Elegant Dining Room')"
+      >
+      <img 
+        src="https://images.pexels.com/photos/67468/pexels-photo-67468.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&dpr=2" 
+        alt="Gourmet Dish" 
+        data-aos="zoom-in" 
+        data-aos-delay="100"
+        loading="lazy"
+        onerror="handleImageError(this, 'gallery-fallback', 'Gourmet Presentation')"
+      >
+      <img 
+        src="https://images.pexels.com/photos/260922/pexels-photo-260922.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&dpr=2" 
+        alt="Bar Area" 
+        data-aos="zoom-in" 
+        data-aos-delay="200"
+        loading="lazy"
+        onerror="handleImageError(this, 'gallery-fallback', 'Premium Bar')"
+      >
+      <img 
+        src="https://images.pexels.com/photos/941861/pexels-photo-941861.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&dpr=2" 
+        alt="Dining Table" 
+        data-aos="zoom-in" 
+        data-aos-delay="300"
+        loading="lazy"
+        onerror="handleImageError(this, 'gallery-fallback', 'Elegant Table Setting')"
+      >
+      <img 
+        src="https://images.pexels.com/photos/260925/pexels-photo-260925.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&dpr=2" 
+        alt="Wine Selection" 
+        data-aos="zoom-in" 
+        data-aos-delay="400"
+        loading="lazy"
+        onerror="handleImageError(this, 'gallery-fallback', 'Wine Collection')"
+      >
+      <img 
+        src="https://images.pexels.com/photos/103566/pexels-photo-103566.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&dpr=2" 
+        alt="Dessert" 
+        data-aos="zoom-in" 
+        data-aos-delay="500"
+        loading="lazy"
+        onerror="handleImageError(this, 'gallery-fallback', 'Artisan Dessert')"
+      >
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="contact" data-aos="fade-up">
+    <h2 class="section-title">Visit Us</h2>
+    <p style="font-size:1.4rem;max-width:800px;margin:0 auto 3rem;">Reservations highly recommended. We can't wait to host you.</p>
+    <a href="tel:+15551234567" class="btn" style="margin-bottom:2rem;">CALL TO RESERVE</a>
+    <div class="contact-grid">
+      <div data-aos="fade-up" data-aos-delay="100">
+        <h3>Opening Hours</h3>
+        <p>Tuesday – Thursday  6:00 PM – 10:00 PM</p>
+        <p>Friday – Saturday   5:30 PM – 11:00 PM</p>
+        <p>Sunday – Monday    Closed</p>
+      </div>
+      <div data-aos="fade-up" data-aos-delay="200">
+        <h3>Location</h3>
+        <p>123 Golden Avenue<br>Downtown District<br>New York, NY 10001</p>
+        <p style="margin-top:1.5rem;"><a href="https://goo.gl/maps/example" style="color:var(--gold);text-decoration:none;">Open in Maps →</a></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 Aurum Restaurant. Crafted with passion.</p>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    // Initialize AOS
+    AOS.init({
+      duration: 1000,
+      once: true,
+      offset: 100
+    });
+
+    // Mobile menu toggle
+    document.getElementById('menuToggle').addEventListener('click', () => {
+      document.getElementById('navLinks').classList.toggle('active');
+    });
+
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', function(e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href');
+        const targetElement = document.querySelector(targetId);
+        
+        if (targetElement) {
+          targetElement.scrollIntoView({ 
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+        
+        // Close mobile menu if open
+        if (document.getElementById('navLinks').classList.contains('active')) {
+          document.getElementById('navLinks').classList.remove('active');
+        }
+      });
+    });
+
+    // Handle hero image error
+    function handleHeroImageError(img) {
+      console.log('Hero image failed to load, applying fallback');
+      img.style.display = 'none';
+      
+      // Add fallback background to hero section
+      const hero = document.querySelector('.hero');
+      hero.style.background = 'linear-gradient(45deg, #0F0F0F 0%, #222222 100%)';
+      
+      // Try alternative image source
+      const backupImage = new Image();
+      backupImage.onload = function() {
+        img.src = 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80';
+        img.style.display = 'block';
+      };
+      backupImage.src = 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80';
+    }
+
+    // Handle regular image errors
+    function handleImageError(imgElement, className, altText) {
+      imgElement.classList.add('img-loading');
+      
+      // Create fallback div
+      const parent = imgElement.parentNode;
+      const fallbackDiv = document.createElement('div');
+      fallbackDiv.className = `image-fallback ${className}`;
+      fallbackDiv.innerHTML = `<div>${altText}</div>`;
+      
+      // Replace image with fallback after a delay
+      setTimeout(() => {
+        if (!imgElement.complete || imgElement.naturalHeight === 0) {
+          parent.replaceChild(fallbackDiv, imgElement);
+        }
+      }, 3000);
+    }
+
+    // Image preloading and retry logic
+    document.addEventListener('DOMContentLoaded', function() {
+      // Retry failed hero image
+      const heroImg = document.querySelector('.hero-bg');
+      if (heroImg && (!heroImg.complete || heroImg.naturalHeight === 0)) {
+        setTimeout(() => {
+          if (!heroImg.complete || heroImg.naturalHeight === 0) {
+            console.log('Retrying hero image...');
+            const originalSrc = heroImg.src;
+            heroImg.src = '';
+            setTimeout(() => {
+              heroImg.src = originalSrc + '&retry=' + Date.now();
+            }, 500);
+          }
+        }, 2000);
+      }
+
+      // Check all images and add loading class
+      const images = document.querySelectorAll('img:not(.hero-bg)');
+      images.forEach(img => {
+        if (!img.complete) {
+          img.classList.add('img-loading');
+        }
+        
+        img.addEventListener('load', function() {
+          this.classList.remove('img-loading');
+        });
+        
+        img.addEventListener('error', function() {
+          this.classList.remove('img-loading');
+        });
+      });
+    });
+
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', function(event) {
+      const navLinks = document.getElementById('navLinks');
+      const menuToggle = document.getElementById('menuToggle');
+      
+      if (navLinks.classList.contains('active') && 
+          !navLinks.contains(event.target) && 
+          !menuToggle.contains(event.target)) {
+        navLinks.classList.remove('active');
+      }
+    });
+  </script>
+</body>
+</html>
