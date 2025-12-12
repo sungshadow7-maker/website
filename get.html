@@ -1,0 +1,1908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ÉLÉGANCE | Fine Dining Experience</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --gold: #d4af37;
+            --gold-light: #f4e9c9;
+            --gold-dark: #b8941f;
+            --dark: #0c0c0c;
+            --dark-light: #1a1a1a;
+            --gray: #8a8a8a;
+            --white: #f8f8f8;
+            --transition-slow: 0.8s cubic-bezier(0.215, 0.61, 0.355, 1);
+            --transition-medium: 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
+            --transition-fast: 0.3s ease;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--dark);
+            color: var(--white);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 400;
+            letter-spacing: 1px;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .section-title {
+            font-size: 3.5rem;
+            text-align: center;
+            margin-bottom: 4rem;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+        }
+
+        .section-title .word {
+            display: inline-block;
+            overflow: hidden;
+            line-height: 1.2;
+        }
+
+        .section-title .char {
+            display: inline-block;
+            transform: translateY(100%);
+            opacity: 0;
+        }
+
+        /* Animated Border Classes */
+        .gold-border {
+            position: relative;
+            padding: 3px;
+        }
+
+        .gold-border:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: inherit;
+            padding: 2px;
+            background: linear-gradient(45deg, var(--gold), transparent, var(--gold-dark), transparent, var(--gold));
+            -webkit-mask: 
+                linear-gradient(#fff 0 0) content-box, 
+                linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            animation: borderRotate 10s linear infinite;
+        }
+
+        .gold-border-inner {
+            position: relative;
+            border-radius: inherit;
+            background-color: var(--dark);
+            z-index: 1;
+        }
+
+        @keyframes borderRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Header & Navigation */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 25px 0;
+            transition: var(--transition-medium);
+        }
+
+        header.scrolled {
+            padding: 15px 0;
+            background-color: rgba(12, 12, 12, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.2rem;
+            font-weight: 600;
+            color: var(--gold);
+            text-decoration: none;
+            letter-spacing: 3px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background-color: var(--gold);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .logo:hover:after {
+            transform: translateX(0);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 40px;
+            position: relative;
+        }
+
+        .nav-links a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 300;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 5px 0;
+            position: relative;
+            transition: var(--transition-fast);
+        }
+
+        .nav-links a:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background-color: var(--gold);
+            transition: width 0.4s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--gold);
+        }
+
+        .nav-links a:hover:after {
+            width: 100%;
+        }
+
+        .nav-cta {
+            margin-left: 60px;
+        }
+
+        .reservation-btn {
+            padding: 12px 28px;
+            background-color: transparent;
+            color: var(--gold);
+            border: 1px solid var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition-fast);
+        }
+
+        .reservation-btn:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background-color: var(--gold);
+            transition: left 0.4s ease;
+            z-index: -1;
+        }
+
+        .reservation-btn:hover {
+            color: var(--dark);
+        }
+
+        .reservation-btn:hover:before {
+            left: 0;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--white);
+        }
+
+        /* Enhanced Hero Section */
+        .hero {
+            height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .hero-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+        }
+
+        .hero-bg-main {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.4;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(12, 12, 12, 0.9), rgba(12, 12, 12, 0.7), rgba(12, 12, 12, 0.9));
+            z-index: -1;
+        }
+
+        /* Floating Food Images */
+        .hero-floating-images {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .floating-image {
+            position: absolute;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid var(--gold);
+            opacity: 0;
+            transform: scale(0);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .floating-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .floating-1 {
+            top: 15%;
+            left: 10%;
+            animation-delay: 0.5s;
+        }
+
+        .floating-2 {
+            top: 60%;
+            left: 5%;
+            animation-delay: 1s;
+        }
+
+        .floating-3 {
+            top: 20%;
+            right: 10%;
+            animation-delay: 1.5s;
+        }
+
+        .floating-4 {
+            top: 65%;
+            right: 8%;
+            animation-delay: 2s;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin-left: 10%;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            letter-spacing: 5px;
+            color: var(--gold);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .hero-title {
+            font-size: 5.5rem;
+            line-height: 1.1;
+            margin-bottom: 30px;
+            opacity: 0;
+            transform: translateY(50px);
+        }
+
+        .hero-title .line {
+            display: block;
+            overflow: hidden;
+        }
+
+        .hero-title .char {
+            display: inline-block;
+            transform: translateY(100%);
+        }
+
+        .hero-description {
+            font-size: 1.1rem;
+            color: var(--white);
+            max-width: 500px;
+            margin-bottom: 40px;
+            opacity: 0;
+            transform: translateY(30px);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero-btns {
+            display: flex;
+            gap: 20px;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .btn-primary {
+            padding: 16px 35px;
+            background-color: var(--gold);
+            color: var(--dark);
+            border: none;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition-fast);
+        }
+
+        .btn-primary:after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn-primary:hover:after {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-secondary {
+            padding: 16px 35px;
+            background-color: transparent;
+            color: var(--gold);
+            border: 1px solid var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition-fast);
+        }
+
+        .btn-secondary:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background-color: var(--gold);
+            transition: left 0.4s ease;
+            z-index: -1;
+        }
+
+        .btn-secondary:hover {
+            color: var(--dark);
+        }
+
+        .btn-secondary:hover:before {
+            left: 0;
+        }
+
+        /* Stats Counter */
+        .hero-stats {
+            display: flex;
+            gap: 40px;
+            margin-top: 60px;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-family: 'Cormorant Garamond', serif;
+            color: var(--gold);
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--white);
+        }
+
+        /* About Section */
+        .about {
+            padding: 120px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-bg-text {
+            position: absolute;
+            font-size: 15rem;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.03);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: -1;
+            white-space: nowrap;
+        }
+
+        .about-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+
+        .about-image {
+            position: relative;
+        }
+
+        .about-img-main {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+            border-radius: 5px;
+            opacity: 0;
+            transform: translateX(-50px);
+        }
+
+        .about-img-frame {
+            position: absolute;
+            top: -30px;
+            right: -30px;
+            width: 300px;
+            height: 300px;
+            border: 2px solid var(--gold);
+            z-index: -1;
+            opacity: 0;
+            transform: translateX(50px);
+        }
+
+        .about-content {
+            opacity: 0;
+            transform: translateX(50px);
+        }
+
+        .about-subtitle {
+            font-size: 1.1rem;
+            letter-spacing: 3px;
+            color: var(--gold);
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .about-title {
+            font-size: 3rem;
+            line-height: 1.2;
+            margin-bottom: 30px;
+        }
+
+        .about-text {
+            color: var(--gray);
+            margin-bottom: 30px;
+            font-size: 1.05rem;
+        }
+
+        .signature {
+            display: block;
+            margin-top: 30px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.2rem;
+            color: var(--gold);
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        /* Menu Section */
+        .menu-section {
+            padding: 120px 0;
+            background-color: var(--dark-light);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .menu-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+        }
+
+        .menu-category {
+            opacity: 0;
+            transform: translateY(50px);
+        }
+
+        .menu-category-title {
+            font-size: 2.2rem;
+            color: var(--gold);
+            margin-bottom: 40px;
+            padding-bottom: 15px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .menu-category-title:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background-color: var(--gold);
+        }
+
+        .menu-items {
+            list-style: none;
+        }
+
+        .menu-item {
+            margin-bottom: 40px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .menu-item-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .menu-item-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.4rem;
+            color: var(--white);
+        }
+
+        .menu-item-price {
+            color: var(--gold);
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        .menu-item-description {
+            color: var(--gray);
+            font-size: 0.95rem;
+        }
+
+        /* Gallery Section */
+        .gallery {
+            padding: 120px 0;
+            position: relative;
+        }
+
+        .gallery-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .gallery-item {
+            height: 350px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 5px;
+            opacity: 0;
+            transform: scale(0.8);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 1s cubic-bezier(0.215, 0.61, 0.355, 1);
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(212, 175, 55, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+        }
+
+        .gallery-overlay-content {
+            text-align: center;
+            transform: translateY(20px);
+            transition: transform 0.5s ease;
+        }
+
+        .gallery-item:hover .gallery-overlay-content {
+            transform: translateY(0);
+        }
+
+        /* Testimonials */
+        .testimonials {
+            padding: 100px 0;
+            background-color: var(--dark-light);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .testimonial-slider {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            height: 300px;
+        }
+
+        .testimonial-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            opacity: 0;
+            transform: translateX(50px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .testimonial-slide.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .testimonial-content {
+            text-align: center;
+            font-size: 1.5rem;
+            font-family: 'Cormorant Garamond', serif;
+            margin-bottom: 40px;
+            color: var(--white);
+            line-height: 1.8;
+        }
+
+        .testimonial-author {
+            text-align: center;
+            color: var(--gold);
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .testimonial-dots {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 50px;
+        }
+
+        .testimonial-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .testimonial-dot.active {
+            background-color: var(--gold);
+        }
+
+        /* Contact & Reservation */
+        .contact {
+            padding: 120px 0;
+            position: relative;
+        }
+
+        .contact-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+        }
+
+        .contact-info {
+            opacity: 0;
+            transform: translateX(-50px);
+        }
+
+        .contact-title {
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            color: var(--gold);
+        }
+
+        .contact-details {
+            list-style: none;
+            margin-bottom: 40px;
+        }
+
+        .contact-details li {
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+        }
+
+        .contact-details i {
+            color: var(--gold);
+            font-size: 1.2rem;
+            margin-right: 15px;
+            width: 30px;
+        }
+
+        .opening-hours {
+            margin-top: 40px;
+        }
+
+        .opening-hours h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--gold);
+        }
+
+        .reservation-form {
+            opacity: 0;
+            transform: translateX(50px);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 15px;
+            background-color: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--white);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.95rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+
+        .form-group label {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            color: var(--gray);
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        .form-group input:focus ~ label,
+        .form-group input:not(:placeholder-shown) ~ label,
+        .form-group select:focus ~ label,
+        .form-group select:not([value=""]):valid ~ label,
+        .form-group textarea:focus ~ label,
+        .form-group textarea:not(:placeholder-shown) ~ label {
+            top: -10px;
+            left: 10px;
+            font-size: 0.8rem;
+            color: var(--gold);
+            background-color: var(--dark);
+            padding: 0 5px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #080808;
+            padding: 80px 0 30px;
+        }
+
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        .footer-logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.2rem;
+            color: var(--gold);
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .footer-about {
+            color: var(--gray);
+            font-size: 0.95rem;
+            margin-bottom: 30px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+            transform: translateY(-5px);
+        }
+
+        .footer-heading {
+            font-size: 1.3rem;
+            color: var(--white);
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            position: relative;
+        }
+
+        .footer-heading:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background-color: var(--gold);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: var(--gray);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--gold);
+        }
+
+        .newsletter-form {
+            margin-top: 20px;
+        }
+
+        .newsletter-input {
+            width: 100%;
+            padding: 12px 15px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--white);
+            margin-bottom: 15px;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .hero-title {
+                font-size: 4.5rem;
+            }
+            
+            .section-title {
+                font-size: 3rem;
+            }
+            
+            .about-container, .menu-container, .contact-container {
+                gap: 50px;
+            }
+            
+            .floating-image {
+                width: 150px;
+                height: 150px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .nav-links, .nav-cta {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .hero-title {
+                font-size: 3.8rem;
+            }
+            
+            .hero-content {
+                margin-left: 5%;
+            }
+            
+            .about-container, .menu-container, .contact-container, .footer-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .gallery-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .floating-image {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .hero-stats {
+                gap: 20px;
+            }
+            
+            .stat-number {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 3rem;
+            }
+            
+            .section-title {
+                font-size: 2.5rem;
+            }
+            
+            .about-title {
+                font-size: 2.5rem;
+            }
+            
+            .gallery-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero-btns, .hero-stats {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .btn-primary, .btn-secondary {
+                width: 100%;
+                text-align: center;
+            }
+            
+            .floating-image {
+                display: none;
+            }
+            
+            .hero-stats {
+                margin-top: 40px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .section-title {
+                font-size: 2.2rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1rem;
+                letter-spacing: 3px;
+            }
+            
+            .about-bg-text {
+                font-size: 8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header id="header">
+        <div class="container header-container">
+            <a href="#" class="logo">ÉLÉGANCE</a>
+            
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#menu">Menu</a></li>
+                    <li><a href="#gallery">Gallery</a></li>
+                    <li><a href="#testimonials">Testimonials</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+            
+            <div class="nav-cta">
+                <button class="reservation-btn">Reservations</button>
+            </div>
+            
+            <div class="mobile-menu-btn" id="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Enhanced Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-background">
+            <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Restaurant Interior" class="hero-bg-main">
+        </div>
+        
+        <div class="hero-overlay"></div>
+        
+        <!-- Floating Food Images -->
+        <div class="hero-floating-images">
+            <div class="floating-image floating-1">
+                <img src="https://images.unsplash.com/photo-1546833999-b9f581a1996d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Gourmet Dish">
+            </div>
+            <div class="floating-image floating-2">
+                <img src="https://images.unsplash.com/photo-1565958011703-44f9829ba187?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Wine Glass">
+            </div>
+            <div class="floating-image floating-3">
+                <img src="https://images.unsplash.com/photo-1571407970349-bc81e7e96d47?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Dessert">
+            </div>
+            <div class="floating-image floating-4">
+                <img src="https://images.unsplash.com/photo-1563379926898-05f4575a45d8?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Pasta Dish">
+            </div>
+        </div>
+        
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-subtitle" id="hero-subtitle">Michelin-Starred Dining</div>
+                <h1 class="hero-title" id="hero-title">
+                    <span class="line"><span class="char">É</span><span class="char">L</span><span class="char">É</span><span class="char">G</span><span class="char">A</span><span class="char">N</span><span class="char">C</span><span class="char">E</span></span>
+                    <span class="line"><span class="char">R</span><span class="char">E</span><span class="char">S</span><span class="char">T</span><span class="char">A</span><span class="char">U</span><span class="char">R</span><span class="char">A</span><span class="char">N</span><span class="char">T</span></span>
+                </h1>
+                <p class="hero-description" id="hero-description">Experience culinary artistry at its finest. Our Michelin-starred chefs create unforgettable dining experiences with seasonal ingredients and innovative techniques.</p>
+                <div class="hero-btns" id="hero-btns">
+                    <button class="btn-primary">View Our Menu</button>
+                    <button class="btn-secondary">Book A Table</button>
+                </div>
+                
+                <!-- Stats Counter -->
+                <div class="hero-stats" id="hero-stats">
+                    <div class="stat-item">
+                        <div class="stat-number" id="stat-years">35</div>
+                        <div class="stat-label">Years Excellence</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="stat-awards">12</div>
+                        <div class="stat-label">Awards Won</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="stat-chefs">8</div>
+                        <div class="stat-label">Master Chefs</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="stat-wines">450</div>
+                        <div class="stat-label">Wine Selection</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about" id="about">
+        <div class="about-bg-text">ÉLÉGANCE</div>
+        
+        <div class="container about-container">
+            <div class="about-image">
+                <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1374&q=80" alt="Restaurant Interior" class="about-img-main">
+                <div class="about-img-frame gold-border">
+                    <div class="gold-border-inner"></div>
+                </div>
+            </div>
+            
+            <div class="about-content">
+                <div class="about-subtitle">Our Story</div>
+                <h2 class="about-title">A Legacy of Culinary Excellence</h2>
+                <p class="about-text">Since 1985, ÉLÉGANCE has been redefining fine dining with an unwavering commitment to exceptional cuisine, impeccable service, and an ambiance of refined luxury.</p>
+                <p class="about-text">Our Michelin-starred chefs combine traditional techniques with innovative approaches, sourcing only the finest seasonal ingredients from around the world to create dishes that are both visually stunning and delightfully flavorful.</p>
+                <p class="about-text">Each visit to ÉLÉGANCE is more than a meal—it's an immersive experience that engages all the senses and creates lasting memories.</p>
+                <span class="signature">Chef Antoine Moreau</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Menu Section -->
+    <section class="menu-section" id="menu">
+        <h2 class="section-title" id="menu-title">
+            <span class="word"><span class="char">C</span><span class="char">u</span><span class="char">l</span><span class="char">i</span><span class="char">n</span><span class="char">a</span><span class="char">r</span><span class="char">y</span></span>
+            <span class="word"><span class="char">C</span><span class="char">r</span><span class="char">e</span><span class="char">a</span><span class="char">t</span><span class="char">i</span><span class="char">o</span><span class="char">n</span><span class="char">s</span></span>
+        </h2>
+        
+        <div class="container menu-container">
+            <div class="menu-category">
+                <h3 class="menu-category-title">Starters</h3>
+                <ul class="menu-items">
+                    <li class="menu-item">
+                        <div class="menu-item-header">
+                            <div class="menu-item-name">Foie Gras Terrine</div>
+                            <div class="menu-item-price">$28</div>
+                        </div>
+                        <div class="menu-item-description">With fig compote, toasted brioche, and port reduction</div>
+                    </li>
+                    <li class="menu-item">
+                        <div class="menu-item-header">
+                            <div class="menu-item-name">Yellowfin Tuna Tartare</div>
+                            <div class="menu-item-price">$26</div>
+                        </div>
+                        <div class="menu-item-description">Avocado, sesame crisps, yuzu-soy emulsion</div>
+                    </li>
+                    <li class="menu-item">
+                        <div class="menu-item-header">
+                            <div class="menu-item-name">Truffle Arancini</div>
+                            <div class="menu-item-price">$22</div>
+                        </div>
+                        <div class="menu-item-description">Black truffle, wild mushroom, parmesan cream</div>
+                    </li>
+                    <li class="menu-item">
+                        <div class="menu-item-header">
+                            <div class="menu-item-name">Heirloom Tomato Salad</div>
+                            <div class="menu-item-price">$24</div>
+                        </div>
+                        <div class="menu-item-description">Burrata, basil oil, aged balsamic, microgreens</div>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="menu-category">
+                <h3 class="menu-category-title">Main Courses</h3>
+                <ul class="menu-items">
+                    <li class="menu-item">
+                        <div class="menu-item-header">
+                            <div class="menu-item-name">Wagyu Beef Tenderloin</div>
+                            <div class="menu-item-price">$68</div>
+                        </div>
+                        <div class="menu-item-description">Truffled potato purée, roasted baby vegetables, red wine jus</div>
+                    </li>
+                    <li class="menu-item">
+                        <div class="menu-item-header">
+                            <div class="menu-item-name">Maine Lobster Thermidor</div>
+                            <div class="menu-item-price">$62</div>
+                        </div>
+                        <div class="menu-item-description">Brandy cream, gruyère gratin, herb butter rice</div>
+                    </li>
+                    <li class="menu-item">
+                        <div class="menu-item-header">
+                            <div class="menu-item-name">Herb-Crusted Rack of Lamb</div>
+                            <div class="menu-item-price">$58</div>
+                        </div>
+                        <div class="menu-item-description">Rosemary jus, ratatouille, goat cheese polenta</div>
+                    </li>
+                    <li class="menu-item">
+                        <div class="menu-item-header">
+                            <div class="menu-item-name">Wild Mushroom Risotto</div>
+                            <div class="menu-item-price">$38</div>
+                        </div>
+                        <div class="menu-item-description">Truffle oil, parmesan, sautéed wild mushrooms</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery -->
+    <section class="gallery" id="gallery">
+        <h2 class="section-title" id="gallery-title">
+            <span class="word"><span class="char">G</span><span class="char">a</span><span class="char">l</span><span class="char">l</span><span class="char">e</span><span class="char">r</span><span class="char">y</span></span>
+        </h2>
+        
+        <div class="container gallery-container">
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80" alt="Restaurant Interior">
+                <div class="gallery-overlay">
+                    <div class="gallery-overlay-content">
+                        <h3>Main Dining Room</h3>
+                        <p>Elegant Atmosphere</p>
+                    </div>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1467&q=80" alt="Gourmet Dish">
+                <div class="gallery-overlay">
+                    <div class="gallery-overlay-content">
+                        <h3>Signature Dish</h3>
+                        <p>Wagyu Beef Tenderloin</p>
+                    </div>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1559925393-8be0ec4767c8?ixlib=rb-4.0.3&auto=format&fit=crop&w=1471&q=80" alt="Wine Cellar">
+                <div class="gallery-overlay">
+                    <div class="gallery-overlay-content">
+                        <h3>Wine Cellar</h3>
+                        <p>Extensive Collection</p>
+                    </div>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1481&q=80" alt="Dessert">
+                <div class="gallery-overlay">
+                    <div class="gallery-overlay-content">
+                        <h3>Dessert Selection</h3>
+                        <p>Artisanal Creations</p>
+                    </div>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80" alt="Chef Preparing Food">
+                <div class="gallery-overlay">
+                    <div class="gallery-overlay-content">
+                        <h3>Open Kitchen</h3>
+                        <p>Chef's Table Experience</p>
+                    </div>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1494&q=80" alt="Cocktail Bar">
+                <div class="gallery-overlay">
+                    <div class="gallery-overlay-content">
+                        <h3>Cocktail Lounge</h3>
+                        <p>Mixology Excellence</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials" id="testimonials">
+        <h2 class="section-title" id="testimonials-title">
+            <span class="word"><span class="char">G</span><span class="char">u</span><span class="char">e</span><span class="char">s</span><span class="char">t</span></span>
+            <span class="word"><span class="char">E</span><span class="char">x</span><span class="char">p</span><span class="char">e</span><span class="char">r</span><span class="char">i</span><span class="char">e</span><span class="char">n</span><span class="char">c</span><span class="char">e</span><span class="char">s</span></span>
+        </h2>
+        
+        <div class="container">
+            <div class="testimonial-slider">
+                <div class="testimonial-slide active">
+                    <div class="testimonial-content">"An unforgettable dining experience. Every detail, from the ambiance to the presentation of the dishes, was perfection. The Wagyu beef was the best I've ever tasted."</div>
+                    <div class="testimonial-author">— Michael Anderson, Food Critic</div>
+                </div>
+                <div class="testimonial-slide">
+                    <div class="testimonial-content">"ÉLÉGANCE sets a new standard for fine dining. The service was impeccable, and the wine pairing was exceptional. We celebrated our anniversary here, and it was magical."</div>
+                    <div class="testimonial-author">— Sarah & James Wilson</div>
+                </div>
+                <div class="testimonial-slide">
+                    <div class="testimonial-content">"As a restaurateur myself, I appreciate the attention to detail at ÉLÉGANCE. The flavors are complex yet balanced, and the presentation is artistic. Truly world-class."</div>
+                    <div class="testimonial-author">— Roberto Cavalli, Chef & Restaurateur</div>
+                </div>
+            </div>
+            
+            <div class="testimonial-dots">
+                <div class="testimonial-dot active" data-slide="0"></div>
+                <div class="testimonial-dot" data-slide="1"></div>
+                <div class="testimonial-dot" data-slide="2"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact & Reservation -->
+    <section class="contact" id="contact">
+        <h2 class="section-title" id="contact-title">
+            <span class="word"><span class="char">R</span><span class="char">e</span><span class="char">s</span><span class="char">e</span><span class="char">r</span><span class="char">v</span><span class="char">a</span><span class="char">t</span><span class="char">i</span><span class="char">o</span><span class="char">n</span><span class="char">s</span></span>
+        </h2>
+        
+        <div class="container contact-container">
+            <div class="contact-info">
+                <h3 class="contact-title">Visit Us</h3>
+                <ul class="contact-details">
+                    <li>
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <h4>Address</h4>
+                            <p>123 Avenue des Champs-Élysées<br>75008 Paris, France</p>
+                        </div>
+                    </li>
+                    <li>
+                        <i class="fas fa-phone"></i>
+                        <div>
+                            <h4>Phone</h4>
+                            <p>+33 1 23 45 67 89</p>
+                        </div>
+                    </li>
+                    <li>
+                        <i class="fas fa-envelope"></i>
+                        <div>
+                            <h4>Email</h4>
+                            <p>reservations@elegance-restaurant.com</p>
+                        </div>
+                    </li>
+                </ul>
+                
+                <div class="opening-hours">
+                    <h3>Opening Hours</h3>
+                    <p>Monday - Thursday: 6:00 PM - 11:00 PM</p>
+                    <p>Friday - Saturday: 5:30 PM - 12:00 AM</p>
+                    <p>Sunday: 5:00 PM - 10:00 PM</p>
+                </div>
+            </div>
+            
+            <div class="reservation-form">
+                <h3 class="contact-title">Book a Table</h3>
+                <form id="reservationForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" id="name" required placeholder=" ">
+                            <label for="name">Full Name</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" id="email" required placeholder=" ">
+                            <label for="email">Email Address</label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="tel" id="phone" required placeholder=" ">
+                            <label for="phone">Phone Number</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="date" id="date" required placeholder=" ">
+                            <label for="date">Date</label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="time" id="time" required placeholder=" ">
+                            <label for="time">Time</label>
+                        </div>
+                        <div class="form-group">
+                            <select id="guests" required>
+                                <option value="" selected disabled></option>
+                                <option value="1">1 Guest</option>
+                                <option value="2">2 Guests</option>
+                                <option value="3">3 Guests</option>
+                                <option value="4">4 Guests</option>
+                                <option value="5">5 Guests</option>
+                                <option value="6">6 Guests</option>
+                                <option value="7">7 Guests</option>
+                                <option value="8">8+ Guests</option>
+                            </select>
+                            <label for="guests">Number of Guests</label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <textarea id="message" rows="4" placeholder=" "></textarea>
+                        <label for="message">Special Requests</label>
+                    </div>
+                    
+                    <button type="submit" class="btn-primary" style="width: 100%;">Make Reservation</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-container">
+            <div class="footer-col">
+                <a href="#" class="footer-logo">ÉLÉGANCE</a>
+                <p class="footer-about">A Michelin-starred restaurant offering an unparalleled fine dining experience in the heart of Paris. Where culinary artistry meets elegant sophistication.</p>
+                <div class="social-links">
+                    <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-tripadvisor"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-col">
+                <h3 class="footer-heading">Quick Links</h3>
+                <ul class="footer-links">
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="#menu">Menu</a></li>
+                    <li><a href="#gallery">Gallery</a></li>
+                    <li><a href="#contact">Reservations</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-col">
+                <h3 class="footer-heading">Contact Info</h3>
+                <ul class="footer-links">
+                    <li><i class="fas fa-map-marker-alt"></i> 123 Avenue des Champs-Élysées, Paris</li>
+                    <li><i class="fas fa-phone"></i> +33 1 23 45 67 89</li>
+                    <li><i class="fas fa-envelope"></i> info@elegance-restaurant.com</li>
+                </ul>
+            </div>
+            
+            <div class="footer-col">
+                <h3 class="footer-heading">Newsletter</h3>
+                <p>Subscribe to receive updates on special events, seasonal menus, and exclusive offers.</p>
+                <form class="newsletter-form">
+                    <input type="email" class="newsletter-input" placeholder="Your email address">
+                    <button type="submit" class="btn-secondary" style="width: 100%;">Subscribe</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="container">
+            <div class="copyright">
+                <p>&copy; 2023 ÉLÉGANCE Restaurant. All rights reserved. | Designed with <i class="fas fa-heart" style="color: #d4af37;"></i></p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // GSAP Animation Library (CDN)
+        const script = document.createElement('script');
+        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js';
+        document.head.appendChild(script);
+        
+        // Load ScrollTrigger plugin
+        const scriptScrollTrigger = document.createElement('script');
+        scriptScrollTrigger.src = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js';
+        document.head.appendChild(scriptScrollTrigger);
+        
+        script.onload = function() {
+            // Wait for ScrollTrigger to load
+            setTimeout(() => {
+                // Hero section animations
+                gsap.to('#hero-subtitle', {
+                    duration: 1.2,
+                    opacity: 1,
+                    y: 0,
+                    delay: 0.5,
+                    ease: "power3.out"
+                });
+                
+                // Animate each character in the hero title
+                const heroTitleChars = document.querySelectorAll('#hero-title .char');
+                heroTitleChars.forEach((char, index) => {
+                    gsap.to(char, {
+                        duration: 1,
+                        y: 0,
+                        opacity: 1,
+                        delay: 1 + (index * 0.05),
+                        ease: "power3.out"
+                    });
+                });
+                
+                gsap.to('#hero-description', {
+                    duration: 1.2,
+                    opacity: 1,
+                    y: 0,
+                    delay: 1.8,
+                    ease: "power3.out"
+                });
+                
+                gsap.to('#hero-btns', {
+                    duration: 1,
+                    opacity: 1,
+                    y: 0,
+                    delay: 2.2,
+                    ease: "power3.out"
+                });
+                
+                // Floating images animation
+                const floatingImages = document.querySelectorAll('.floating-image');
+                floatingImages.forEach((image, index) => {
+                    gsap.to(image, {
+                        duration: 1.5,
+                        opacity: 1,
+                        scale: 1,
+                        delay: 2.5 + (index * 0.3),
+                        ease: "back.out(1.7)",
+                        onComplete: function() {
+                            // Make them float continuously
+                            gsap.to(image, {
+                                duration: 3,
+                                y: "+=20px",
+                                repeat: -1,
+                                yoyo: true,
+                                ease: "sine.inOut"
+                            });
+                        }
+                    });
+                });
+                
+                // Animate stats counter
+                gsap.to('#hero-stats', {
+                    duration: 1,
+                    opacity: 1,
+                    y: 0,
+                    delay: 3,
+                    ease: "power3.out",
+                    onComplete: function() {
+                        // Animate counting numbers
+                        const statYears = document.getElementById('stat-years');
+                        const statAwards = document.getElementById('stat-awards');
+                        const statChefs = document.getElementById('stat-chefs');
+                        const statWines = document.getElementById('stat-wines');
+                        
+                        gsap.to(statYears, {
+                            duration: 2,
+                            innerText: 35,
+                            snap: { innerText: 1 },
+                            ease: "power2.out"
+                        });
+                        
+                        gsap.to(statAwards, {
+                            duration: 2,
+                            innerText: 12,
+                            snap: { innerText: 1 },
+                            ease: "power2.out",
+                            delay: 0.2
+                        });
+                        
+                        gsap.to(statChefs, {
+                            duration: 2,
+                            innerText: 8,
+                            snap: { innerText: 1 },
+                            ease: "power2.out",
+                            delay: 0.4
+                        });
+                        
+                        gsap.to(statWines, {
+                            duration: 2,
+                            innerText: 450,
+                            snap: { innerText: 5 },
+                            ease: "power2.out",
+                            delay: 0.6
+                        });
+                    }
+                });
+                
+                // Section title animations with ScrollTrigger
+                const sectionTitles = document.querySelectorAll('.section-title');
+                sectionTitles.forEach(title => {
+                    const chars = title.querySelectorAll('.char');
+                    gsap.to(chars, {
+                        duration: 0.8,
+                        y: 0,
+                        opacity: 1,
+                        stagger: 0.03,
+                        scrollTrigger: {
+                            trigger: title,
+                            start: "top 80%",
+                            toggleActions: "play none none none"
+                        }
+                    });
+                });
+                
+                // About section animations
+                gsap.to('.about-img-main', {
+                    duration: 1.5,
+                    opacity: 1,
+                    x: 0,
+                    scrollTrigger: {
+                        trigger: '.about',
+                        start: "top 70%",
+                        toggleActions: "play none none none"
+                    }
+                });
+                
+                gsap.to('.about-img-frame', {
+                    duration: 1.5,
+                    opacity: 1,
+                    x: 0,
+                    scrollTrigger: {
+                        trigger: '.about',
+                        start: "top 70%",
+                        toggleActions: "play none none none"
+                    }
+                });
+                
+                gsap.to('.about-content', {
+                    duration: 1.5,
+                    opacity: 1,
+                    x: 0,
+                    scrollTrigger: {
+                        trigger: '.about',
+                        start: "top 70%",
+                        toggleActions: "play none none none"
+                    }
+                });
+                
+                gsap.to('.signature', {
+                    duration: 1,
+                    opacity: 1,
+                    y: 0,
+                    delay: 0.5,
+                    scrollTrigger: {
+                        trigger: '.about',
+                        start: "top 60%",
+                        toggleActions: "play none none none"
+                    }
+                });
+                
+                // Menu animations
+                const menuCategories = document.querySelectorAll('.menu-category');
+                menuCategories.forEach(category => {
+                    gsap.to(category, {
+                        duration: 1.2,
+                        opacity: 1,
+                        y: 0,
+                        scrollTrigger: {
+                            trigger: category,
+                            start: "top 80%",
+                            toggleActions: "play none none none"
+                        }
+                    });
+                });
+                
+                const menuItems = document.querySelectorAll('.menu-item');
+                menuItems.forEach((item, index) => {
+                    gsap.to(item, {
+                        duration: 1,
+                        opacity: 1,
+                        y: 0,
+                        delay: index * 0.1,
+                        scrollTrigger: {
+                            trigger: item,
+                            start: "top 90%",
+                            toggleActions: "play none none none"
+                        }
+                    });
+                });
+                
+                // Gallery animations
+                const galleryItems = document.querySelectorAll('.gallery-item');
+                galleryItems.forEach((item, index) => {
+                    gsap.to(item, {
+                        duration: 1,
+                        opacity: 1,
+                        scale: 1,
+                        delay: index * 0.1,
+                        scrollTrigger: {
+                            trigger: item,
+                            start: "top 85%",
+                            toggleActions: "play none none none"
+                        }
+                    });
+                });
+                
+                // Contact animations
+                gsap.to('.contact-info', {
+                    duration: 1.2,
+                    opacity: 1,
+                    x: 0,
+                    scrollTrigger: {
+                        trigger: '.contact',
+                        start: "top 70%",
+                        toggleActions: "play none none none"
+                    }
+                });
+                
+                gsap.to('.reservation-form', {
+                    duration: 1.2,
+                    opacity: 1,
+                    x: 0,
+                    scrollTrigger: {
+                        trigger: '.contact',
+                        start: "top 70%",
+                        toggleActions: "play none none none"
+                    }
+                });
+            }, 500);
+        };
+        
+        // Testimonial slider
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.testimonial-slide');
+        const dots = document.querySelectorAll('.testimonial-dot');
+        
+        function showSlide(n) {
+            // Hide all slides
+            slides.forEach(slide => {
+                slide.classList.remove('active');
+            });
+            
+            // Remove active class from all dots
+            dots.forEach(dot => {
+                dot.classList.remove('active');
+            });
+            
+            // Show current slide and activate corresponding dot
+            currentSlide = (n + slides.length) % slides.length;
+            slides[currentSlide].classList.add('active');
+            dots[currentSlide].classList.add('active');
+        }
+        
+        // Add click events to dots
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                showSlide(index);
+            });
+        });
+        
+        // Auto-advance testimonials
+        setInterval(() => {
+            showSlide(currentSlide + 1);
+        }, 5000);
+        
+        // Header scroll effect
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('header');
+            if (window.scrollY > 100) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+        
+        // Form submission
+        document.getElementById('reservationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const name = document.getElementById('name').value;
+            const date = document.getElementById('date').value;
+            
+            // Show confirmation (in a real app, you would send to a server)
+            alert(`Thank you, ${name}! Your reservation for ${date} has been received. We will contact you shortly to confirm.`);
+            
+            // Reset form
+            this.reset();
+        });
+        
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            const navLinks = document.querySelector('.nav-links');
+            const navCta = document.querySelector('.nav-cta');
+            
+            if (navLinks.style.display === 'flex') {
+                navLinks.style.display = 'none';
+                navCta.style.display = 'none';
+            } else {
+                navLinks.style.display = 'flex';
+                navCta.style.display = 'block';
+                
+                // Apply flex column for mobile
+                navLinks.style.flexDirection = 'column';
+                navLinks.style.position = 'absolute';
+                navLinks.style.top = '100%';
+                navLinks.style.left = '0';
+                navLinks.style.width = '100%';
+                navLinks.style.backgroundColor = 'var(--dark)';
+                navLinks.style.padding = '30px';
+                navLinks.style.gap = '20px';
+                navLinks.style.boxShadow = '0 10px 30px rgba(0,0,0,0.3)';
+                
+                navCta.style.position = 'absolute';
+                navCta.style.top = 'calc(100% + 200px)';
+                navCta.style.left = '0';
+                navCta.style.width = '100%';
+                navCta.style.padding = '0 30px';
+            }
+        });
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if(targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if(targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
