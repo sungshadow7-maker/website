@@ -1,0 +1,1648 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>和の感覚 | モダン日本料理レストラン</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.min.js"></script>
+    <style>
+        :root {
+            --japanese-red: #bc002d;
+            --japanese-blue: #203a71;
+            --japanese-gold: #b28c00;
+            --japanese-green: #2d5f2d;
+            --modern-gray: #f5f5f7;
+            --dark-gray: #1d1d1f;
+            --light-beige: #f8f3e6;
+            --gold-accent: #b8860b;
+            --shadow-light: rgba(0, 0, 0, 0.08);
+            --shadow-medium: rgba(0, 0, 0, 0.15);
+            --sakura-pink: #ffb7c5;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans JP', 'Montserrat', sans-serif;
+            background-color: var(--modern-gray);
+            color: var(--dark-gray);
+            overflow-x: hidden;
+            line-height: 1.8;
+            scroll-behavior: smooth;
+        }
+        
+        h1, h2, h3, h4 {
+            font-family: 'Playfair Display', 'Noto Sans JP', serif;
+            font-weight: 600;
+        }
+        
+        .japanese-font {
+            font-family: 'Noto Sans JP', sans-serif;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Interactive Background */
+        #interactive-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            pointer-events: none;
+        }
+        
+        /* Sakura Petal Animation */
+        .sakura-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .sakura-petal {
+            position: absolute;
+            background-color: var(--sakura-pink);
+            border-radius: 50% 0 50% 50%;
+            opacity: 0.7;
+            animation: fall linear infinite;
+        }
+        
+        @keyframes fall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.8;
+            }
+            90% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        /* Japanese Pattern Overlay */
+        .japanese-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23bc002d' fill-opacity='0.05'%3E%3Cpath d='M50 50c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c0 5.523-4.477 10-10 10s-10-4.477-10-10 4.477-10 10-10zM10 10c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c0 5.523-4.477 10-10 10S0 25.523 0 20s4.477-10 10-10zm10 8c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm40 40c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            z-index: -2;
+            opacity: 0.2;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: rgba(29, 29, 31, 0.95);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            padding: 20px 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        header.scrolled {
+            padding: 12px 0;
+            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .logo-icon {
+            color: var(--japanese-red);
+            font-size: 2.2rem;
+            animation: gentlePulse 4s ease-in-out infinite;
+        }
+        
+        @keyframes gentlePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .logo h1 {
+            color: white;
+            font-size: 1.8rem;
+            letter-spacing: 1px;
+        }
+        
+        .logo span {
+            color: var(--japanese-red);
+        }
+        
+        .logo .japanese-subtitle {
+            font-family: 'Noto Sans JP', sans-serif;
+            font-size: 0.9rem;
+            color: #aaa;
+            margin-top: 3px;
+            font-weight: 300;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 35px;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 0;
+            position: relative;
+            transition: color 0.3s ease;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+        }
+        
+        nav a:hover {
+            color: var(--japanese-red);
+        }
+        
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--japanese-red);
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        nav a:hover::after {
+            width: 100%;
+        }
+        
+        /* Enhanced Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-bg-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -3;
+        }
+        
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(29, 29, 31, 0.85) 0%, rgba(188, 0, 45, 0.3) 100%);
+            z-index: -2;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            max-width: 800px;
+            color: white;
+            text-align: center;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .hero-title-main {
+            font-size: 5rem;
+            margin-bottom: 10px;
+            line-height: 1;
+            text-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
+            letter-spacing: 3px;
+            color: white;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .hero-title-main::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--japanese-red), transparent);
+        }
+        
+        .hero-title-japanese {
+            font-size: 3.5rem;
+            font-weight: 300;
+            margin-bottom: 30px;
+            color: var(--light-beige);
+            text-shadow: 0 3px 15px rgba(0, 0, 0, 0.3);
+            letter-spacing: 5px;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 300;
+            line-height: 1.8;
+        }
+        
+        .hero-kanji {
+            font-size: 8rem;
+            color: rgba(255, 255, 255, 0.05);
+            position: absolute;
+            z-index: -1;
+            font-family: 'Noto Sans JP', sans-serif;
+            font-weight: 900;
+            user-select: none;
+        }
+        
+        .kanji-1 {
+            top: 10%;
+            left: 5%;
+            transform: rotate(-15deg);
+        }
+        
+        .kanji-2 {
+            bottom: 10%;
+            right: 5%;
+            transform: rotate(15deg);
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background-color: var(--japanese-red);
+            color: white;
+            padding: 18px 40px;
+            border-radius: 0;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid transparent;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.95rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        .btn:hover {
+            background-color: transparent;
+            border-color: var(--japanese-red);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(188, 0, 45, 0.3);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border-color: white;
+        }
+        
+        .btn-outline:hover {
+            background-color: white;
+            color: var(--dark-gray);
+            border-color: white;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 50px;
+        }
+        
+        /* Parallax Scrolling Sections */
+        .parallax-section {
+            position: relative;
+            overflow: hidden;
+            padding: 150px 0;
+        }
+        
+        .parallax-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 120%;
+            background-size: cover;
+            background-position: center;
+            z-index: -1;
+            transform: translateY(0);
+            transition: transform 0.1s ease-out;
+        }
+        
+        .parallax-content {
+            position: relative;
+            z-index: 10;
+            background-color: rgba(255, 255, 255, 0.92);
+            padding: 60px;
+            max-width: 800px;
+            margin: 0 auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid var(--japanese-red);
+        }
+        
+        /* Sections */
+        section {
+            padding: 120px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 80px;
+            position: relative;
+        }
+        
+        .section-title h2 {
+            font-size: 3rem;
+            color: var(--dark-gray);
+            display: inline-block;
+            padding-bottom: 20px;
+            position: relative;
+        }
+        
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background-color: var(--japanese-red);
+        }
+        
+        .section-title .japanese-subtitle {
+            font-family: 'Noto Sans JP', sans-serif;
+            font-size: 1.1rem;
+            color: #666;
+            margin-top: 15px;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+        
+        /* Scroll Animations */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .scroll-reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Menu Section */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 40px;
+        }
+        
+        .menu-item {
+            background-color: white;
+            border-radius: 0;
+            overflow: hidden;
+            box-shadow: 0 10px 30px var(--shadow-light);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .menu-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 1;
+        }
+        
+        .menu-item:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 20px 50px var(--shadow-medium);
+        }
+        
+        .menu-item:hover::before {
+            opacity: 1;
+        }
+        
+        .menu-item-img {
+            height: 220px;
+            background-size: cover;
+            background-position: center;
+            transition: transform 0.8s ease;
+        }
+        
+        .menu-item:hover .menu-item-img {
+            transform: scale(1.05);
+        }
+        
+        .menu-item-content {
+            padding: 25px;
+            position: relative;
+            z-index: 2;
+            background-color: white;
+        }
+        
+        .menu-item h3 {
+            color: var(--dark-gray);
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .menu-item h3 .japanese-name {
+            font-family: 'Noto Sans JP', sans-serif;
+            font-size: 1rem;
+            color: #777;
+            font-weight: 400;
+        }
+        
+        .menu-item p {
+            color: #666;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+        }
+        
+        .menu-item-price {
+            color: var(--japanese-red);
+            font-weight: 700;
+            font-size: 1.3rem;
+        }
+        
+        /* 3D Viewer */
+        #dish-viewer {
+            width: 100%;
+            height: 500px;
+            margin: 80px 0;
+            border-radius: 0;
+            overflow: hidden;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.15);
+            background-color: #f9f9f9;
+        }
+        
+        /* Micro-interactions */
+        .icon-animated {
+            font-size: 2.2rem;
+            color: var(--japanese-blue);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-block;
+            cursor: pointer;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background-color: white;
+            box-shadow: 0 10px 25px var(--shadow-light);
+        }
+        
+        .icon-animated:hover {
+            color: var(--japanese-red);
+            transform: translateY(-10px) scale(1.1);
+            box-shadow: 0 20px 40px var(--shadow-medium);
+        }
+        
+        .progress-container {
+            width: 100%;
+            height: 6px;
+            background-color: #eee;
+            border-radius: 3px;
+            margin-top: 15px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--japanese-blue), var(--japanese-red));
+            width: 0%;
+            transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .loading-animation {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin: 50px 0;
+        }
+        
+        .loading-dot {
+            width: 14px;
+            height: 14px;
+            background-color: var(--japanese-red);
+            border-radius: 50%;
+            animation: bounce 1.5s infinite ease-in-out both;
+        }
+        
+        .loading-dot:nth-child(1) { animation-delay: -0.32s; }
+        .loading-dot:nth-child(2) { animation-delay: -0.16s; }
+        
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+        
+        /* Canvas Animation */
+        .canvas-container {
+            width: 100%;
+            height: 350px;
+            margin: 60px 0;
+            border-radius: 0;
+            overflow: hidden;
+            background-color: #f9f9f9;
+            position: relative;
+        }
+        
+        /* Sticky Elements */
+        .sticky-reservation {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: var(--japanese-red);
+            color: white;
+            padding: 18px 30px;
+            border-radius: 0;
+            box-shadow: 0 15px 40px rgba(188, 0, 45, 0.4);
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            font-weight: 600;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+        }
+        
+        .sticky-reservation:hover {
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: 0 25px 60px rgba(188, 0, 45, 0.5);
+        }
+        
+        .reservation-icon {
+            animation: ring 3s infinite ease-in-out;
+        }
+        
+        @keyframes ring {
+            0%, 100% { transform: rotate(0); }
+            5%, 15% { transform: rotate(-15deg); }
+            10%, 20% { transform: rotate(15deg); }
+            25% { transform: rotate(0); }
+        }
+        
+        /* Zoom Effects on Scroll */
+        .zoom-on-scroll {
+            transition: transform 0.3s ease-out;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--dark-gray);
+            color: white;
+            padding: 80px 0 40px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 50px;
+            margin-bottom: 60px;
+        }
+        
+        .footer-section h3 {
+            color: white;
+            margin-bottom: 25px;
+            font-size: 1.5rem;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        .footer-section h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background-color: var(--japanese-red);
+        }
+        
+        .footer-section p {
+            margin-bottom: 20px;
+            color: #aaa;
+            line-height: 1.7;
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+        
+        .social-icon {
+            width: 42px;
+            height: 42px;
+            background-color: rgba(255, 255, 255, 0.08);
+            border-radius: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .social-icon:hover {
+            background-color: var(--japanese-red);
+            transform: translateY(-5px);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+        }
+        
+        /* Modern Korean Grid Pattern (keeping Korean style) */
+        .modern-korean-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(to right, rgba(0,0,0,0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0,0,0,0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: -1;
+            opacity: 0.5;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1100px) {
+            .hero-title-main {
+                font-size: 4rem;
+            }
+            
+            .hero-title-japanese {
+                font-size: 2.8rem;
+            }
+            
+            nav ul {
+                gap: 25px;
+            }
+        }
+        
+        @media (max-width: 900px) {
+            .header-container {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .hero {
+                height: 90vh;
+            }
+            
+            .hero-title-main {
+                font-size: 3.2rem;
+            }
+            
+            .hero-title-japanese {
+                font-size: 2.2rem;
+            }
+            
+            .hero-kanji {
+                font-size: 5rem;
+            }
+            
+            .menu-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            }
+            
+            .section-title h2 {
+                font-size: 2.5rem;
+            }
+            
+            .parallax-content {
+                padding: 40px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 20px;
+            }
+            
+            .hero-title-main {
+                font-size: 2.5rem;
+            }
+            
+            .hero-title-japanese {
+                font-size: 1.8rem;
+            }
+            
+            .hero-kanji {
+                font-size: 3.5rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+            
+            .section-title h2 {
+                font-size: 2.2rem;
+            }
+            
+            .parallax-section {
+                padding: 100px 0;
+            }
+            
+            section {
+                padding: 80px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Interactive Background -->
+    <div id="interactive-bg"></div>
+    
+    <!-- Sakura Petal Animation -->
+    <div class="sakura-container" id="sakura-container"></div>
+    
+    <!-- Japanese Pattern Overlay -->
+    <div class="japanese-pattern"></div>
+    
+    <!-- Modern Korean Grid (keeping Korean style) -->
+    <div class="modern-korean-grid"></div>
+    
+    <!-- Header -->
+    <header id="header">
+        <div class="container header-container">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-seedling"></i>
+                </div>
+                <div>
+                    <h1>和の感覚 <span> | WANO KANKAKU</span></h1>
+                    <div class="japanese-subtitle">モダン日本料理レストラン</div>
+                </div>
+            </div>
+            
+            <nav>
+                <ul>
+                    <li><a href="#home">ホーム</a></li>
+                    <li><a href="#about">私たちの哲学</a></li>
+                    <li><a href="#menu">メニュー</a></li>
+                    <li><a href="#experience">体験</a></li>
+                    <li><a href="#contact">予約</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <!-- Enhanced Hero Section -->
+    <section id="home" class="hero">
+        <!-- Canvas Background for Hero -->
+        <canvas class="hero-bg-canvas" id="hero-canvas"></canvas>
+        
+        <!-- Japanese Kanji Background Elements -->
+        <div class="hero-kanji kanji-1">和</div>
+        <div class="hero-kanji kanji-2">食</div>
+        
+        <div class="hero-overlay"></div>
+        
+        <div class="container">
+            <div class="hero-content scroll-reveal">
+                <h1 class="hero-title-main">和の感覚</h1>
+                <div class="hero-title-japanese">WANO KANKAKU</div>
+                <p class="hero-subtitle">伝統的な日本料理の味を現代的な技術で再解釈し、遺産を尊重しながら革新を受け入れる忘れられない食事体験を創造します。</p>
+                
+                <div class="hero-buttons">
+                    <a href="#menu" class="btn">
+                        <i class="fas fa-utensils"></i>
+                        メニューを見る
+                    </a>
+                    <a href="#contact" class="btn btn-outline">
+                        <i class="fas fa-calendar-alt"></i>
+                        テーブルを予約
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Parallax Scrolling Section -->
+    <section class="parallax-section">
+        <div class="parallax-bg" style="background-image: url('https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');"></div>
+        <div class="container">
+            <div class="parallax-content scroll-reveal">
+                <h2 style="margin-bottom: 20px;">日本料理の哲学</h2>
+                <p class="japanese-font" style="font-style: italic; color: #666; margin-bottom: 25px;">「一期一会」 - Ichigo Ichie</p>
+                <p>日本料理は季節感、盛り付け、食材の自然な味を重視します。私たちのシェフは「和食」の原則に従い、自然との調和を重視した日本の伝統的な食文化を大切にしています。</p>
+                
+                <!-- Micro-interaction: Animated Icons -->
+                <div style="display: flex; justify-content: space-around; margin: 40px 0; flex-wrap: wrap; gap: 30px;">
+                    <div style="text-align: center;">
+                        <div class="icon-animated">
+                            <i class="fas fa-leaf"></i>
+                        </div>
+                        <p style="text-align: center; margin-top: 15px; font-weight: 500;">季節の食材</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <div class="icon-animated">
+                            <i class="fas fa-balance-scale"></i>
+                        </div>
+                        <p style="text-align: center; margin-top: 15px; font-weight: 500;">調和とバランス</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <div class="icon-animated">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <p style="text-align: center; margin-top: 15px; font-weight: 500;">伝統的な技術</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <div class="icon-animated">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <p style="text-align: center; margin-top: 15px; font-weight: 500;">モダンな盛り付け</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- About Section -->
+    <section id="about">
+        <div class="container">
+            <div class="section-title">
+                <h2>私たちの哲学</h2>
+                <div class="japanese-subtitle">Our Philosophy</div>
+            </div>
+            
+            <div class="scroll-reveal" style="max-width: 900px; margin: 0 auto;">
+                <p style="font-size: 1.1rem; margin-bottom: 40px; text-align: center;">和の感覚では、「うま味」という日本の食事哲学を信じています。完璧な味のバランスが調和のとれた食事体験を創造します。私たちのシェフは、何世紀も前の技術と現代の料理革新を組み合わせています。</p>
+                
+                <!-- Progress Indicators -->
+                <div style="max-width: 700px; margin: 60px auto;">
+                    <div class="progress-item">
+                        <p style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <span>本格的な日本の味</span>
+                            <span>95%</span>
+                        </p>
+                        <div class="progress-container">
+                            <div class="progress-bar" data-width="95"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-item" style="margin-top: 30px;">
+                        <p style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <span>食材の品質</span>
+                            <span>98%</span>
+                        </p>
+                        <div class="progress-container">
+                            <div class="progress-bar" data-width="98"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-item" style="margin-top: 30px;">
+                        <p style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <span>食事体験</span>
+                            <span>92%</span>
+                        </p>
+                        <div class="progress-container">
+                            <div class="progress-bar" data-width="92"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-item" style="margin-top: 30px;">
+                        <p style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <span>顧客満足度</span>
+                            <span>96%</span>
+                        </p>
+                        <div class="progress-container">
+                            <div class="progress-bar" data-width="96"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Loading Animation -->
+                <div class="loading-animation">
+                    <div class="loading-dot"></div>
+                    <div class="loading-dot"></div>
+                    <div class="loading-dot"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Menu Section -->
+    <section id="menu" style="background-color: var(--light-beige);">
+        <div class="container">
+            <div class="section-title">
+                <h2>シグネチャーディッシュ</h2>
+                <div class="japanese-subtitle">Signature Dishes</div>
+            </div>
+            
+            <div class="menu-grid">
+                <!-- Menu Items with Scroll Animations -->
+                <div class="menu-item scroll-reveal zoom-on-scroll">
+                    <div class="menu-item-img" style="background-image: url('https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
+                    <div class="menu-item-content">
+                        <h3>刺身盛り合わせ
+                            <span class="japanese-name">Sashimi Platter</span>
+                        </h3>
+                        <p>マグロ、サーモン、ハマチ、鯛などの季節の新鮮な魚のセレクション。わさびと醤油でお召し上がりください。</p>
+                        <div class="menu-item-price">¥6,500</div>
+                    </div>
+                </div>
+                
+                <div class="menu-item scroll-reveal zoom-on-scroll">
+                    <div class="menu-item-img" style="background-image: url('https://images.unsplash.com/photo-1589302168068-964664d93dc0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
+                    <div class="menu-item-content">
+                        <h3>和牛ステーキ
+                            <span class="japanese-name">Wagyu Steak</span>
+                        </h3>
+                        <p>最高級の日本和牛、完璧な霜降りで完璧に焼き上げ、季節の野菜と共にお召し上がりください。</p>
+                        <div class="menu-item-price">¥12,000</div>
+                    </div>
+                </div>
+                
+                <div class="menu-item scroll-reveal zoom-on-scroll">
+                    <div class="menu-item-img" style="background-image: url('https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
+                    <div class="menu-item-content">
+                        <h3>懐石料理
+                            <span class="japanese-name">Kaiseki Dinner</span>
+                        </h3>
+                        <p>季節の食材と細心の盛り付けを特徴とする伝統的な日本のフルコースディナー。</p>
+                        <div class="menu-item-price">¥18,000</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 3D Dish Viewer -->
+            <div id="dish-viewer" class="scroll-reveal"></div>
+            
+            <!-- Canvas Animation -->
+            <div class="canvas-container scroll-reveal">
+                <canvas id="food-canvas"></canvas>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Experience Section -->
+    <section id="experience">
+        <div class="container">
+            <div class="section-title">
+                <h2>和の感覚の体験</h2>
+                <div class="japanese-subtitle">The Wano Kankaku Experience</div>
+            </div>
+            
+            <div style="max-width: 900px; margin: 0 auto;">
+                <div class="scroll-reveal" style="text-align: center; margin-bottom: 60px;">
+                    <p style="font-size: 1.1rem;">現代的な環境で、「おもてなし」として知られる伝統的な日本のおもてなしを体験してください。私たちのダイニングルームは、伝統的な日本のデザイン要素の現代的解釈を特徴とし、私たちの料理を補完する静かな雰囲気を作り出しています。</p>
+                </div>
+                
+                <!-- Sticky-like element that changes on scroll -->
+                <div class="scroll-reveal" style="background-color: white; padding: 40px; box-shadow: 0 15px 50px var(--shadow-light); margin-top: 40px; position: relative;">
+                    <div id="sticky-feature" style="display: flex; align-items: center; gap: 40px; flex-wrap: wrap;">
+                        <div style="flex: 1; min-width: 300px;">
+                            <h3 style="margin-bottom: 20px;">日本茶道体験</h3>
+                            <p>伝統的な日本茶道の現代的解釈を体験してください。私たちの茶道師が季節の茶葉を選び、ひとつひとつの茶碗を細心の注意を払って準備します。</p>
+                            <a href="#contact" class="btn" style="margin-top: 20px; padding: 12px 30px;">体験を予約</a>
+                        </div>
+                        <div style="flex: 1; min-width: 300px; height: 250px; background-image: url('https://images.unsplash.com/photo-1567690346812-4618f62f3980?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'); background-size: cover; background-position: center;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Sticky Reservation Button -->
+    <div class="sticky-reservation">
+        <div class="reservation-icon">
+            <i class="fas fa-calendar-alt"></i>
+        </div>
+        <span>予約する</span>
+    </div>
+    
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>和の感覚</h3>
+                    <p>伝統を尊重しながら革新を受け入れる現代日本料理。味、食感、色の完璧なバランスを体験してください。</p>
+                    <div class="social-icons">
+                        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>連絡先</h3>
+                    <p><i class="fas fa-map-marker-alt" style="margin-right: 10px;"></i> 東京都中央区銀座1-2-3</p>
+                    <p><i class="fas fa-phone" style="margin-right: 10px;"></i> 03-1234-5678</p>
+                    <p><i class="fas fa-envelope" style="margin-right: 10px;"></i> info@wanokankaku.com</p>
+                    <p><i class="fas fa-clock" style="margin-right: 10px;"></i> 月〜日: 11:30 AM - 10:00 PM</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>予約</h3>
+                    <p>予約については、お電話いただくか、オンライン予約システムをご利用ください。週末のディナーには少なくとも1週間前の予約をお勧めします。</p>
+                    <a href="#contact" class="btn" style="margin-top: 20px; display: inline-block;">今すぐ予約</a>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>© 2023 和の感覚 モダン日本料理レストラン。全著作権所有。</p>
+                <p style="margin-top: 10px; font-size: 0.8rem;">デザインは韓国の美意識と現代的なミニマリズムにインスパイアされています</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Enhanced Particle System for Interactive Background
+        class EnhancedParticleSystem {
+            constructor() {
+                this.canvas = document.getElementById('hero-canvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.particles = [];
+                this.mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2, radius: 150 };
+                this.animationId = null;
+                
+                this.init();
+                this.animate();
+            }
+            
+            init() {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
+                
+                // Create particles with Japanese color palette
+                const colors = ['#bc002d', '#203a71', '#b28c00', '#2d5f2d', '#ffb7c5'];
+                
+                for (let i = 0; i < 180; i++) {
+                    this.particles.push({
+                        x: Math.random() * this.canvas.width,
+                        y: Math.random() * this.canvas.height,
+                        size: Math.random() * 5 + 2,
+                        speedX: Math.random() * 1.5 - 0.75,
+                        speedY: Math.random() * 1.5 - 0.75,
+                        color: colors[Math.floor(Math.random() * colors.length)],
+                        opacity: Math.random() * 0.6 + 0.2,
+                        waveOffset: Math.random() * Math.PI * 2
+                    });
+                }
+                
+                // Mouse move event
+                window.addEventListener('mousemove', (e) => {
+                    this.mouse.x = e.clientX;
+                    this.mouse.y = e.clientY;
+                });
+                
+                // Resize event
+                window.addEventListener('resize', () => {
+                    this.canvas.width = window.innerWidth;
+                    this.canvas.height = window.innerHeight;
+                });
+            }
+            
+            animate() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                // Draw subtle gradient background
+                const gradient = this.ctx.createLinearGradient(0, 0, 0, this.canvas.height);
+                gradient.addColorStop(0, '#1d1d1f');
+                gradient.addColorStop(1, '#0a0a0a');
+                this.ctx.fillStyle = gradient;
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                // Draw Japanese wave pattern in background
+                this.ctx.strokeStyle = 'rgba(188, 0, 45, 0.05)';
+                this.ctx.lineWidth = 1;
+                
+                // Wave pattern
+                for (let y = 0; y < this.canvas.height; y += 60) {
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(0, y);
+                    
+                    for (let x = 0; x < this.canvas.width; x += 10) {
+                        const waveY = y + Math.sin(x * 0.02 + Date.now() * 0.001) * 15;
+                        this.ctx.lineTo(x, waveY);
+                    }
+                    
+                    this.ctx.stroke();
+                }
+                
+                // Update and draw particles
+                const time = Date.now() * 0.001;
+                
+                for (let i = 0; i < this.particles.length; i++) {
+                    let p = this.particles[i];
+                    
+                    // Add wave motion
+                    p.x += p.speedX + Math.sin(time + p.waveOffset) * 0.3;
+                    p.y += p.speedY + Math.cos(time + p.waveOffset) * 0.3;
+                    
+                    // Wrap around screen
+                    if (p.x > this.canvas.width) p.x = 0;
+                    if (p.x < 0) p.x = this.canvas.width;
+                    if (p.y > this.canvas.height) p.y = 0;
+                    if (p.y < 0) p.y = this.canvas.height;
+                    
+                    // Mouse interaction
+                    let dx = this.mouse.x - p.x;
+                    let dy = this.mouse.y - p.y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < this.mouse.radius) {
+                        let angle = Math.atan2(dy, dx);
+                        let force = (this.mouse.radius - distance) / this.mouse.radius;
+                        p.speedX -= Math.cos(angle) * force * 0.8;
+                        p.speedY -= Math.sin(angle) * force * 0.8;
+                        
+                        // Draw glow around mouse
+                        this.ctx.beginPath();
+                        const gradient = this.ctx.createRadialGradient(
+                            this.mouse.x, this.mouse.y, 0,
+                            this.mouse.x, this.mouse.y, this.mouse.radius
+                        );
+                        gradient.addColorStop(0, 'rgba(188, 0, 45, 0.2)');
+                        gradient.addColorStop(1, 'rgba(188, 0, 45, 0)');
+                        this.ctx.fillStyle = gradient;
+                        this.ctx.arc(this.mouse.x, this.mouse.y, this.mouse.radius, 0, Math.PI * 2);
+                        this.ctx.fill();
+                        
+                        // Draw connection line to mouse
+                        if (distance < this.mouse.radius * 0.7) {
+                            this.ctx.beginPath();
+                            this.ctx.strokeStyle = `rgba(255, 183, 197, ${0.3 * (1 - distance/this.mouse.radius)})`;
+                            this.ctx.lineWidth = 1.5;
+                            this.ctx.moveTo(p.x, p.y);
+                            this.ctx.lineTo(this.mouse.x, this.mouse.y);
+                            this.ctx.stroke();
+                        }
+                    }
+                    
+                    // Draw particle with glow effect
+                    this.ctx.beginPath();
+                    const gradient = this.ctx.createRadialGradient(
+                        p.x, p.y, 0,
+                        p.x, p.y, p.size * 3
+                    );
+                    gradient.addColorStop(0, p.color);
+                    gradient.addColorStop(1, 'transparent');
+                    
+                    this.ctx.fillStyle = gradient;
+                    this.ctx.arc(p.x, p.y, p.size * 3, 0, Math.PI * 2);
+                    this.ctx.fill();
+                    
+                    // Draw particle core
+                    this.ctx.beginPath();
+                    this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    this.ctx.fillStyle = p.color;
+                    this.ctx.globalAlpha = p.opacity;
+                    this.ctx.fill();
+                    this.ctx.globalAlpha = 1;
+                    
+                    // Draw connections between nearby particles
+                    for (let j = i + 1; j < this.particles.length; j++) {
+                        let p2 = this.particles[j];
+                        let dx = p.x - p2.x;
+                        let dy = p.y - p2.y;
+                        let distance = Math.sqrt(dx * dx + dy * dy);
+                        
+                        if (distance < 150) {
+                            this.ctx.beginPath();
+                            this.ctx.strokeStyle = `rgba(32, 58, 113, ${0.1 * (1 - distance/150)})`;
+                            this.ctx.lineWidth = 0.5;
+                            this.ctx.moveTo(p.x, p.y);
+                            this.ctx.lineTo(p2.x, p2.y);
+                            this.ctx.stroke();
+                        }
+                    }
+                }
+                
+                // Draw floating Japanese characters
+                this.ctx.font = '40px "Noto Sans JP"';
+                this.ctx.fillStyle = 'rgba(255, 255, 255, 0.03)';
+                this.ctx.textAlign = 'center';
+                
+                const kanji = ['和', '食', '美', '雅', '静', '味', '香', '色'];
+                kanji.forEach((char, index) => {
+                    const x = (this.canvas.width / kanji.length) * index + this.canvas.width / (kanji.length * 2);
+                    const y = this.canvas.height / 2 + Math.sin(time * 0.5 + index) * 50;
+                    this.ctx.fillText(char, x, y);
+                });
+                
+                this.animationId = requestAnimationFrame(() => this.animate());
+            }
+            
+            stop() {
+                if (this.animationId) {
+                    cancelAnimationFrame(this.animationId);
+                }
+            }
+        }
+        
+        // Initialize enhanced particle system
+        const particleSystem = new EnhancedParticleSystem();
+        
+        // Sakura petal animation
+        function createSakuraPetal() {
+            const sakuraContainer = document.getElementById('sakura-container');
+            const petal = document.createElement('div');
+            petal.className = 'sakura-petal';
+            
+            // Random size
+            const size = Math.random() * 15 + 5;
+            petal.style.width = `${size}px`;
+            petal.style.height = `${size}px`;
+            
+            // Random position
+            petal.style.left = `${Math.random() * 100}%`;
+            
+            // Random opacity
+            petal.style.opacity = Math.random() * 0.5 + 0.3;
+            
+            // Random animation duration
+            const duration = Math.random() * 10 + 10;
+            petal.style.animationDuration = `${duration}s`;
+            
+            // Random animation delay
+            petal.style.animationDelay = `${Math.random() * 5}s`;
+            
+            sakuraContainer.appendChild(petal);
+            
+            // Remove petal after animation completes
+            setTimeout(() => {
+                petal.remove();
+            }, duration * 1000);
+        }
+        
+        // Create sakura petals periodically
+        setInterval(createSakuraPetal, 300);
+        
+        // Create initial sakura petals
+        for (let i = 0; i < 20; i++) {
+            setTimeout(() => createSakuraPetal(), i * 200);
+        }
+        
+        // Parallax Scrolling for background images
+        document.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            
+            // Parallax background
+            const parallaxBg = document.querySelector('.parallax-bg');
+            if (parallaxBg) {
+                parallaxBg.style.transform = `translateY(${scrolled * 0.3}px)`;
+            }
+            
+            // Zoom effect on scroll for menu items
+            const zoomElements = document.querySelectorAll('.zoom-on-scroll');
+            zoomElements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+                
+                if (elementTop < windowHeight && elementTop > -200) {
+                    const progress = 1 - (elementTop / windowHeight);
+                    const scale = 1 + (0.1 * progress);
+                    element.style.transform = `scale(${scale})`;
+                } else {
+                    element.style.transform = 'scale(1)';
+                }
+            });
+            
+            // Sticky feature changes
+            const stickyFeature = document.getElementById('sticky-feature');
+            if (stickyFeature) {
+                const sectionTop = document.getElementById('experience').getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+                
+                if (sectionTop < windowHeight * 0.7 && sectionTop > -200) {
+                    const progress = 1 - (sectionTop / (windowHeight * 0.7));
+                    stickyFeature.style.opacity = 0.8 + (0.2 * progress);
+                    stickyFeature.style.transform = `translateY(${20 * (1 - progress)}px)`;
+                }
+            }
+        });
+        
+        // Scroll Animations
+        const scrollReveals = document.querySelectorAll('.scroll-reveal');
+        
+        const revealOnScroll = () => {
+            scrollReveals.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+                
+                if (elementTop < windowHeight - 100) {
+                    element.classList.add('active');
+                }
+            });
+        };
+        
+        window.addEventListener('scroll', revealOnScroll);
+        revealOnScroll(); // Initial check
+        
+        // Header scroll effect
+        const header = document.getElementById('header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+        
+        // Progress bars animation
+        const progressBars = document.querySelectorAll('.progress-bar');
+        
+        const animateProgressBars = () => {
+            progressBars.forEach(bar => {
+                const width = bar.getAttribute('data-width');
+                bar.style.width = '0%';
+                
+                setTimeout(() => {
+                    bar.style.width = width + '%';
+                }, 500);
+            });
+        };
+        
+        // Trigger progress bars when about section is in view
+        const aboutSection = document.getElementById('about');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateProgressBars();
+                }
+            });
+        }, { threshold: 0.3 });
+        
+        observer.observe(aboutSection);
+        
+        // Simple 3D Scene with Three.js - Japanese Bento Box
+        function initThreeJS() {
+            const container = document.getElementById('dish-viewer');
+            if (!container) return;
+            
+            // Create scene
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0xf9f9f9);
+            
+            // Create camera
+            const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+            camera.position.z = 8;
+            camera.position.y = 3;
+            
+            // Create renderer
+            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            container.appendChild(renderer.domElement);
+            
+            // Add lighting
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            scene.add(ambientLight);
+            
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(5, 10, 7);
+            scene.add(directionalLight);
+            
+            // Create a Japanese bento box
+            const boxGeometry = new THREE.BoxGeometry(5, 2, 3);
+            const boxMaterial = new THREE.MeshPhongMaterial({ 
+                color: 0x8b4513,
+                shininess: 30,
+                specular: 0x111111
+            });
+            
+            const box = new THREE.Mesh(boxGeometry, boxMaterial);
+            scene.add(box);
+            
+            // Create lid for the bento box
+            const lidGeometry = new THREE.BoxGeometry(5.1, 0.2, 3.1);
+            const lidMaterial = new THREE.MeshPhongMaterial({ 
+                color: 0xa0522d,
+                shininess: 40
+            });
+            
+            const lid = new THREE.Mesh(lidGeometry, lidMaterial);
+            lid.position.y = 1.2;
+            lid.position.x = -1;
+            lid.rotation.y = 0.5;
+            scene.add(lid);
+            
+            // Create rice section
+            const riceGeometry = new THREE.BoxGeometry(2, 0.8, 2.5);
+            const riceMaterial = new THREE.MeshPhongMaterial({ 
+                color: 0xf8f3e6,
+                shininess: 10
+            });
+            
+            const rice = new THREE.Mesh(riceGeometry, riceMaterial);
+            rice.position.set(-1, 0.5, 0);
+            scene.add(rice);
+            
+            // Add controls
+            const controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableZoom = true;
+            controls.enablePan = false;
+            controls.autoRotate = true;
+            controls.autoRotateSpeed = 0.5;
+            
+            // Animation loop
+            function animate() {
+                requestAnimationFrame(animate);
+                
+                // Rotate the bento box slowly
+                box.rotation.y += 0.002;
+                rice.rotation.y += 0.002;
+                
+                // Gently open and close the lid
+                lid.rotation.y = 0.5 + Math.sin(Date.now() * 0.001) * 0.05;
+                
+                controls.update();
+                renderer.render(scene, camera);
+            }
+            
+            animate();
+            
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                camera.aspect = container.clientWidth / container.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.clientWidth, container.clientHeight);
+            });
+        }
+        
+        // Initialize 3D viewer when menu section is in view
+        const menuSection = document.getElementById('menu');
+        const threeJSObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    if (!document.getElementById('dish-viewer').hasChildNodes()) {
+                        setTimeout(initThreeJS, 300);
+                    }
+                }
+            });
+        }, { threshold: 0.3 });
+        
+        threeJSObserver.observe(menuSection);
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Micro-interaction for menu items
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-15px) scale(1.03)';
+            });
+            
+            item.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+        
+        // Sticky reservation button interaction
+        const stickyReservation = document.querySelector('.sticky-reservation');
+        stickyReservation.addEventListener('click', function() {
+            window.scrollTo({
+                top: document.getElementById('contact').offsetTop - 100,
+                behavior: 'smooth'
+            });
+        });
+        
+        // Add subtle hover effect to all buttons
+        document.querySelectorAll('.btn').forEach(button => {
+            button.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px)';
+            });
+            
+            button.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+        
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', () => {
+            particleSystem.stop();
+        });
+    </script>
+</body>
+</html>
